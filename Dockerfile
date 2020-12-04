@@ -5,6 +5,6 @@ ADD crontab /etc/cron.d/daily-scrambles
 RUN chmod 0644 /etc/cron.d/daily-scrambles
 RUN crontab /etc/cron.d/daily-scrambles
 
-COPY build/libs/scrambler-1.0.0.jar /mongo-scrambler.jar
+COPY scrambler.jar /scrambler.jar
 
 CMD ["cron", "-f"]
