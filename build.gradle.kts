@@ -6,8 +6,6 @@ plugins {
   id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
-version = "1.1.0"
-
 repositories {
   mavenCentral()
   maven(url = "https://dl.bintray.com/thewca/tnoodle-lib")
