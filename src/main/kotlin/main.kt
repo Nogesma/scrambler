@@ -23,6 +23,7 @@ fun main(args:Array<String>) {
     generateScrambles(PuzzleRegistry.SQ1, "SQ1", date, collection)
     generateScrambles(PuzzleRegistry.MEGA, "MEGA", date, collection)
     generateScrambles(PuzzleRegistry.PYRA, "PYRA", date, collection)
+    generateScrambles(PuzzleRegistry.CLOCK, "CLOCK", date, collection)
 }
 
 fun generateScrambles(Puzzle: PuzzleRegistry, event: String, date: String, collection: MongoCollection<Document>) {
