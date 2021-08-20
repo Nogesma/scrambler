@@ -24,6 +24,7 @@ fun main(args:Array<String>) {
     generateScrambles(PuzzleRegistry.MEGA, "MEGA", date, collection)
     generateScrambles(PuzzleRegistry.PYRA, "PYRA", date, collection)
     generateScrambles(PuzzleRegistry.CLOCK, "CLOCK", date, collection)
+    generateScrambles(PuzzleRegistry.SKEWB, "SKEWB", date, collection)
 }
 
 fun generateScrambles(Puzzle: PuzzleRegistry, event: String, date: String, collection: MongoCollection<Document>) {
