@@ -1,10 +1,8 @@
-FROM openjdk:11-buster
+FROM openjdk:17-alpine
 
-RUN apt-get update && apt-get -y install cron
-ADD crontab /etc/cron.d/daily-scrambles
-RUN chmod 0644 /etc/cron.d/daily-scrambles
-RUN crontab /etc/cron.d/daily-scrambles
+RUN apk add busybox-initscripts
 
 COPY scrambler.jar /scrambler.jar
+COPY scrambles.sh /etc/periodic/daily/scrambles
 
-CMD ["cron", "-f"]
+CMD ["crond", "-f"]

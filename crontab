@@ -1,1 +1,0 @@
-0 4 * * * root /usr/local/openjdk-11/bin/java -jar /scrambler.jar mongod 27017 cube

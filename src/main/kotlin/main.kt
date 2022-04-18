@@ -7,48 +7,58 @@ import org.worldcubeassociation.tnoodle.svglite.Svg
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-fun main(args:Array<String>) {
-    val mongoClient = MongoClients.create("mongodb://${args[0]}:${args[1]}/")
-    val database = mongoClient.getDatabase(args[2])
-    val collection = database.getCollection("scrambles")
+fun main(args: Array<String>) {
+	val mongoClient = MongoClients.create("mongodb://${args[0]}:${args[1]}/")
+	val database = mongoClient.getDatabase(args[2])
+	val scrambleStringCollection = database.getCollection("scrambles")
+	val scrambleSvgCollection = database.getCollection("svgs")
 
-    val date = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+	val date = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-    generateScrambles(PuzzleRegistry.THREE, "333", date, collection)
-    generateScrambles(PuzzleRegistry.TWO, "222", date, collection)
-    generateScrambles(PuzzleRegistry.FOUR, "444", date, collection)
-    generateScrambles(PuzzleRegistry.FIVE, "555", date, collection)
-    generateScrambles(PuzzleRegistry.THREE_NI, "3BLD", date, collection)
-    generateScrambles(PuzzleRegistry.THREE, "OH", date, collection)
-    generateScrambles(PuzzleRegistry.SQ1, "SQ1", date, collection)
-    generateScrambles(PuzzleRegistry.MEGA, "MEGA", date, collection)
-    generateScrambles(PuzzleRegistry.PYRA, "PYRA", date, collection)
-    generateScrambles(PuzzleRegistry.CLOCK, "CLOCK", date, collection)
-    generateScrambles(PuzzleRegistry.SKEWB, "SKEWB", date, collection)
+	val puzzles = mapOf(
+		"333" to PuzzleRegistry.THREE,
+		"222" to PuzzleRegistry.TWO,
+		"444" to PuzzleRegistry.FOUR,
+		"555" to PuzzleRegistry.FIVE,
+		"3BLD" to PuzzleRegistry.THREE_NI,
+		"OH" to PuzzleRegistry.THREE,
+		"SQ1" to PuzzleRegistry.SQ1,
+		"MEGA" to PuzzleRegistry.MEGA,
+		"PYRA" to PuzzleRegistry.PYRA,
+		"CLOCK" to PuzzleRegistry.CLOCK,
+		"SKEWB" to PuzzleRegistry.SKEWB,
+	)
+
+	puzzles.forEach { (t, u) -> generateScrambles(t, u, date, scrambleStringCollection, scrambleSvgCollection) }
 }
 
-fun generateScrambles(Puzzle: PuzzleRegistry, event: String, date: String, collection: MongoCollection<Document>) {
-    val scrambles = getScrambles(Puzzle, 5)
-    collection.insertOne(Document.parse(Gson().toJson(ScrambleObject(scrambles, event, date))))
+fun generateScrambles(
+	event: String,
+	Puzzle: PuzzleRegistry,
+	date: String,
+	scrambleStringCollection: MongoCollection<Document>,
+	scrambleSvgCollection: MongoCollection<Document>
+) {
+	val scrambles = getScrambleString(Puzzle, 5)
+	val svg = getScrambleSvg(Puzzle, scrambles)
+	scrambleStringCollection.insertOne(Document.parse(Gson().toJson(ScrambleStringObject(scrambles, event, date))))
+	scrambleSvgCollection.insertOne(Document.parse(Gson().toJson(ScrambleSvgObject(svg, event, date))))
 }
 
 fun parseSVG(svg: Svg): String {
-    svg.setAttribute("width", "100%")
-    svg.setAttribute("height", "100%")
-    return svg.toString().replace(oldValue = "stroke=\"#000000\"", newValue = "stroke=\"#1E1E1E\"")
+	svg.setAttribute("width", "100%")
+	svg.setAttribute("height", "100%")
+	return svg.toString().replace(oldValue = "stroke=\"#000000\"", newValue = "stroke=\"#1E1E1E\"")
 }
 
-class Scramble(Puzzle: PuzzleRegistry) {
-    private val scrambleString: String = Puzzle.scrambler.generateScramble()
-    private val svg: String
+class ScrambleStringObject(val scrambles: List<String>, val event: String, val date: String)
 
-    init {
-        svg = parseSVG(Puzzle.scrambler.drawScramble(scrambleString, Puzzle.scrambler.defaultColorScheme))
-    }
+fun getScrambleString(Puzzle: PuzzleRegistry, n: Int): List<String> {
+	return List(n) { Puzzle.scrambler.generateScramble() }
 }
 
-class ScrambleObject(val scrambles: Array<Scramble>, val event: String, val date: String)
+class ScrambleSvgObject(val svg: List<String>, val event: String, val date: String)
 
-fun getScrambles(Puzzle: PuzzleRegistry, n: Int): Array<Scramble> {
-    return Array(n) { Scramble(Puzzle) }
+fun getScrambleSvg(Puzzle: PuzzleRegistry, scrambles: List<String>): List<String> {
+	return scrambles.map { s -> parseSVG(Puzzle.scrambler.drawScramble(s, Puzzle.scrambler.defaultColorScheme)) }
 }
