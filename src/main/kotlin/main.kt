@@ -40,10 +40,11 @@ fun generateScrambles(
 	scrambleSvgCollection: MongoCollection<Document>
 ) {
 	val scrambles = getScrambleString(Puzzle, 5)
-	val svg = getScrambleSvg(Puzzle, scrambles)
 	scrambleStringCollection.insertOne(Document.parse(Gson().toJson(ScrambleStringObject(scrambles, event, date))))
-	if (event !in arrayOf("333", "222", "OH", "3BLD", "444", "555"))
+	if (event !in arrayOf("333", "222", "OH", "3BLD", "444", "555")) {
+		val svg = getScrambleSvg(Puzzle, scrambles)
 		scrambleSvgCollection.insertOne(Document.parse(Gson().toJson(ScrambleSvgObject(svg, event, date))))
+	}
 }
 
 fun parseSVG(svg: Svg): String {
