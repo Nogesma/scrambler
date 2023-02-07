@@ -41,7 +41,7 @@ fun generateScrambles(
 ) {
 	val scrambles = getScrambleString(Puzzle, 5)
 	scrambleStringCollection.insertOne(Document.parse(Gson().toJson(ScrambleStringObject(scrambles, event, date))))
-	if (event !in arrayOf("333", "222", "OH", "3BLD", "444", "555")) {
+	if (event !in arrayOf("333", "222", "OH", "3BLD", "444", "555", "MEGA")) {
 		val svg = getScrambleSvg(Puzzle, scrambles)
 		scrambleSvgCollection.insertOne(Document.parse(Gson().toJson(ScrambleSvgObject(svg, event, date))))
 	}

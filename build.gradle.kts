@@ -11,11 +11,11 @@ repositories {
 }
 
 dependencies {
-  implementation("org.worldcubeassociation.tnoodle:lib-scrambles:0.18.1")
+  implementation("org.worldcubeassociation.tnoodle:lib-scrambles:0.18.0")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-  implementation("org.jetbrains.kotlinx:atomicfu-jvm:0.17.1")
-  implementation("com.github.ajalt.clikt:clikt:3.4.0")
-  implementation("org.mongodb:mongodb-driver-sync:4.5.1")
+  implementation("org.jetbrains.kotlinx:atomicfu-jvm:0.17.2")
+  implementation("com.github.ajalt.clikt:clikt:3.4.2")
+  implementation("org.mongodb:mongodb-driver-sync:4.6.0")
   implementation("com.google.code.gson:gson:2.9.0")
 }
 
