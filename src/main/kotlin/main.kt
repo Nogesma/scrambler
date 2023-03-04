@@ -16,19 +16,19 @@ fun main(args: Array<String>) {
 	val date = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     val puzzles = mapOf(
-        "333" to PuzzleRegistry.THREE,
-        "222" to PuzzleRegistry.TWO,
-        "444" to PuzzleRegistry.FOUR,
-        "555" to PuzzleRegistry.FIVE,
-        "3BLD" to PuzzleRegistry.THREE_NI,
-        "OH" to PuzzleRegistry.THREE,
-        "SQ1" to PuzzleRegistry.SQ1,
-        "MEGA" to PuzzleRegistry.MEGA,
-        "PYRA" to PuzzleRegistry.PYRA,
-        "CLOCK" to PuzzleRegistry.CLOCK,
-        "SKEWB" to PuzzleRegistry.SKEWB,
-        "666" to PuzzleRegistry.SIX,
-        "777" to PuzzleRegistry.SEVEN,
+        "333" to Triple(PuzzleRegistry.THREE, 5, false),
+        "222" to Triple(PuzzleRegistry.TWO, 5, false),
+        "444" to Triple(PuzzleRegistry.FOUR, 5, false),
+        "555" to Triple(PuzzleRegistry.FIVE, 5, false),
+        "3BLD" to Triple(PuzzleRegistry.THREE_NI, 5, false),
+        "OH" to Triple(PuzzleRegistry.THREE, 5, false),
+        "SQ1" to Triple(PuzzleRegistry.SQ1, 5, true),
+        "MEGA" to Triple(PuzzleRegistry.MEGA, 5, false),
+        "PYRA" to Triple(PuzzleRegistry.PYRA, 5, true),
+        "CLOCK" to Triple(PuzzleRegistry.CLOCK, 5, true),
+        "SKEWB" to Triple(PuzzleRegistry.SKEWB, 5, true),
+        "666" to Triple(PuzzleRegistry.SIX, 3, false),
+        "777" to Triple(PuzzleRegistry.SEVEN, 3, false),
     )
 
     puzzles.forEach { (t, u) -> generateScrambles(t, u, date, scrambleStringCollection, scrambleSvgCollection) }
@@ -36,15 +36,15 @@ fun main(args: Array<String>) {
 
 fun generateScrambles(
     event: String,
-    puzzle: PuzzleRegistry,
+    puzzle: Triple<PuzzleRegistry, Int, Boolean>,
     date: String,
     scrambleStringCollection: MongoCollection<Document>,
     scrambleSvgCollection: MongoCollection<Document>
 ) {
-    val scrambles = getScrambleString(puzzle, 5)
+    val scrambles = getScrambleString(puzzle.first, puzzle.second)
     scrambleStringCollection.insertOne(Document.parse(Gson().toJson(ScrambleStringObject(scrambles, event, date))))
-    if (event in arrayOf("SKEWB", "CLOCK", "PYRA", "SQ1")) {
-        val svg = getScrambleSvg(puzzle, scrambles)
+    if (puzzle.third) {
+        val svg = getScrambleSvg(puzzle.first, scrambles)
         scrambleSvgCollection.insertOne(Document.parse(Gson().toJson(ScrambleSvgObject(svg, event, date))))
     }
 }
