@@ -1,6 +1,4 @@
-FROM openjdk:21-alpine
-
-RUN apk add busybox-initscripts
+FROM amazoncorretto:21-alpine
 
 COPY scrambler.jar /scrambler.jar
 COPY scrambles.sh /etc/periodic/daily/scrambles
