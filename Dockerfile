@@ -1,4 +1,4 @@
-FROM openjdk:19-alpine
+FROM openjdk:21-alpine
 
 RUN apk add busybox-initscripts
 

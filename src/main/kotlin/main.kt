@@ -29,6 +29,7 @@ fun main(args: Array<String>) {
         "SKEWB" to Triple(PuzzleRegistry.SKEWB, 5, true),
         "666" to Triple(PuzzleRegistry.SIX, 3, false),
         "777" to Triple(PuzzleRegistry.SEVEN, 3, false),
+        "4BLD" to Triple(PuzzleRegistry.FOUR_NI, 3, false),
     )
 
     puzzles.forEach { (t, u) -> generateScrambles(t, u, date, scrambleStringCollection, scrambleSvgCollection) }
@@ -55,14 +56,14 @@ fun parseSVG(svg: Svg): String {
     return svg.toString().replace(oldValue = "stroke=\"#000000\"", newValue = "stroke=\"#1E1E1E\"")
 }
 
-class ScrambleStringObject(val scrambles: List<String>, val event: String, val date: String)
+class ScrambleStringObject(val scrambles: Array<String>, val event: String, val date: String)
 
-fun getScrambleString(puzzle: PuzzleRegistry, n: Int): List<String> {
-    return List(n) { puzzle.scrambler.generateScramble() }
+fun getScrambleString(puzzle: PuzzleRegistry, n: Int): Array<String> {
+     return puzzle.scrambler.generateScrambles(n)
 }
 
 class ScrambleSvgObject(val svg: List<String>, val event: String, val date: String)
 
-fun getScrambleSvg(puzzle: PuzzleRegistry, scrambles: List<String>): List<String> {
+fun getScrambleSvg(puzzle: PuzzleRegistry, scrambles: Array<String>): List<String> {
     return scrambles.map { s -> parseSVG(puzzle.scrambler.drawScramble(s, puzzle.scrambler.defaultColorScheme)) }
 }

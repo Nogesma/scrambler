@@ -1,7 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "2.2.20"
     application
-    id("com.github.johnrengelman.shadow") version "8.1.0"
 }
 
 repositories {
@@ -9,24 +8,26 @@ repositories {
 }
 
 dependencies {
-    implementation("org.worldcubeassociation.tnoodle:lib-scrambles:0.18.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-    implementation("org.jetbrains.kotlinx:atomicfu-jvm:0.17.2")
-    implementation("com.github.ajalt.clikt:clikt:3.4.2")
-    implementation("org.mongodb:mongodb-driver-sync:4.6.0")
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("org.worldcubeassociation.tnoodle:lib-scrambles:0.19.2")
+    implementation("org.mongodb:mongodb-driver-sync:5.6.0")
+    implementation("com.google.code.gson:gson:2.13.2")
 }
 
 kotlin {
-    jvmToolchain(19)
+    jvmToolchain(21)
 }
 
 application {
     mainClass.set("MainKt")
 }
 
-tasks {
-    shadowJar {
-        archiveClassifier.set("")
+tasks.jar.configure {
+    manifest {
+        attributes(mapOf("Main-Class" to "MainKt"))
     }
+
+    from(configurations["runtimeClasspath"].map { file: File ->
+       if (file.isDirectory) file else zipTree(file.absoluteFile)
+    })
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
