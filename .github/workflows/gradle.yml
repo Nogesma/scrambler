@@ -47,5 +47,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          tags: nogesma/scrambler:latest
+          tags: ghcr.io/nogesma/scrambler:latest
           push: true
