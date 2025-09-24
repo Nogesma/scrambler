@@ -44,5 +44,6 @@ jobs:
       - name: Docker Build & Push Action
         uses: docker/build-push-action@v6
         with:
+          context: .
           tags: "scrambler:latest"
           push: true
